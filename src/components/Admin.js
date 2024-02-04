@@ -7,7 +7,6 @@ import { RiDeleteBin7Fill } from "react-icons/ri";
 const Admin = () => {
   const [database, setDatabase] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
-  const [isSelected, setIsSelected] = useState(false);
   const [editData, setEditData] = useState({
     id: null,
     name: "",
@@ -15,6 +14,8 @@ const Admin = () => {
     role: "",
   });
   const [searchValue, setSearchValue] = useState("");
+  const [isSelected, setIsSelected] = useState(false);
+
   useEffect(() => {
     getData();
     focus.current.focus();
@@ -26,7 +27,12 @@ const Admin = () => {
     try {
       const data = await fetch(Api_calling);
       const json = await data.json();
-      setDatabase(json);
+      setDatabase(
+        json.map((item) => ({
+          ...item,
+          selected: false,
+        }))
+      );
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -40,6 +46,7 @@ const Admin = () => {
     const itemToEdit = database.find((item) => item.id === id);
     setEditData(itemToEdit);
   };
+
   const handleSave = () => {
     setDatabase((prevDatabase) => {
       return prevDatabase.map((item) =>
@@ -55,22 +62,26 @@ const Admin = () => {
       [key]: value,
     }));
   };
+
   const handleCheckboxChange = (id) => {
+    setDatabase((prevDatabase) =>
+      prevDatabase.map((item) =>
+        item.id === id
+          ? { ...item, selected: !item.selected }
+          : { ...item, selected: item.selected }
+      )
+    );
     setSelectedIds((prevSelectedIds) =>
       prevSelectedIds.includes(id)
         ? prevSelectedIds.filter((selectedId) => selectedId !== id)
         : [...prevSelectedIds, id]
     );
-    setIsSelected(!isSelected);
   };
 
   const handle_delete_many = () => {
-    setDatabase((prevDatabase) => {
-      const updatedDatabase = prevDatabase.filter(
-        (item) => !selectedIds.includes(item.id)
-      );
-      return updatedDatabase;
-    });
+    setDatabase((prevDatabase) =>
+      prevDatabase.filter((item) => !selectedIds.includes(item.id))
+    );
     setSelectedIds([]);
   };
 
@@ -109,19 +120,24 @@ const Admin = () => {
               item.role.toLowerCase().includes(searchValue.toLowerCase())
           )
           .map((item) => (
-            <ul className="flex p-2" key={item.id}>
+            <ul
+              className={`flex p-2 ${item.selected ? "bg-blue-100" : ""}`}
+              key={item.id}
+            >
               <input
                 type="checkbox"
-                checked={selectedIds.includes(item.id)}
+                checked={item.selected}
                 onChange={() => handleCheckboxChange(item.id)}
-                className="mr-1" 
+                className="mr-1"
               />
               <div className="w-1/4">
                 {editData.id === item.id ? (
                   <input
                     value={editData.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSave()}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" && handleSave()
+                    }
                   />
                 ) : (
                   item.name
@@ -132,7 +148,9 @@ const Admin = () => {
                   <input
                     value={editData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSave()}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" && handleSave()
+                    }
                   />
                 ) : (
                   item.email
@@ -143,7 +161,9 @@ const Admin = () => {
                   <input
                     value={editData.role}
                     onChange={(e) => handleInputChange("role", e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSave()}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" && handleSave()
+                    }
                   />
                 ) : (
                   item.role
