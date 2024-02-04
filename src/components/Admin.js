@@ -2,9 +2,12 @@ import React, { useRef, useEffect, useState } from "react";
 import { Api_calling } from "../constants";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
+import { RiDeleteBin7Fill } from "react-icons/ri";
 
 const Admin = () => {
   const [database, setDatabase] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [isSelected, setIsSelected] = useState(false);
   const [editData, setEditData] = useState({
     id: null,
     name: "",
@@ -52,22 +55,46 @@ const Admin = () => {
       [key]: value,
     }));
   };
+  const handleCheckboxChange = (id) => {
+    setSelectedIds((prevSelectedIds) =>
+      prevSelectedIds.includes(id)
+        ? prevSelectedIds.filter((selectedId) => selectedId !== id)
+        : [...prevSelectedIds, id]
+    );
+    setIsSelected(!isSelected);
+  };
+
+  const handle_delete_many = () => {
+    setDatabase((prevDatabase) => {
+      const updatedDatabase = prevDatabase.filter(
+        (item) => !selectedIds.includes(item.id)
+      );
+      return updatedDatabase;
+    });
+    setSelectedIds([]);
+  };
 
   return (
     <div className="w-[75%] mx-auto bg-red-100 rounded-md">
-      <div className="mt-10 mx-1 rounded-sm">
+      <div className="mt-10 flex items-center mx-1 rounded-sm">
         <input
-          className="border ml-1  mt-2"
+          className="border ml-1 mb-1 mt-2"
           placeholder="Search"
           type="text"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           ref={focus}
         />
+        <RiDeleteBin7Fill
+          title="delete many"
+          onClick={handle_delete_many}
+          className="text-center ml-auto h-5 w-5 text-red-500"
+        />
       </div>
+
       <div className="bg-blue-200">
         <ul className="flex p-2">
-          <li className="w-1/4 font-bold">Name</li>
+          <li className="w-1/4 ml-5 font-bold">Name</li>
           <li className="w-1/4 font-bold">Email</li>
           <li className="w-1/4 font-bold">Role</li>
           <li className="w-1/4 font-bold">Actions</li>
@@ -83,6 +110,12 @@ const Admin = () => {
           )
           .map((item) => (
             <ul className="flex p-2" key={item.id}>
+              <input
+                type="checkbox"
+                checked={selectedIds.includes(item.id)}
+                onChange={() => handleCheckboxChange(item.id)}
+                className="mr-1" 
+              />
               <div className="w-1/4">
                 {editData.id === item.id ? (
                   <input
@@ -116,7 +149,7 @@ const Admin = () => {
                   item.role
                 )}
               </div>
-              <li className="w-1/4">
+              <li className="w-1/4 ">
                 <span className="flex">
                   {editData.id === item.id ? (
                     <FaEdit
