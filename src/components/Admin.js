@@ -14,7 +14,6 @@ const Admin = () => {
     role: "",
   });
   const [searchValue, setSearchValue] = useState("");
-  const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {
     getData();
