@@ -86,11 +86,11 @@ const Admin = () => {
   };
 
   return (
-    <div className="w-[75%] mx-auto bg-red-100 rounded-md">
+    <div className="w-[75%] mx-auto bg-red-50 rounded-md">
       <div className="mt-10 flex items-center mx-1 rounded-sm">
         <input
           className="border ml-1 mb-1 mt-2"
-          placeholder="Search"
+          placeholder="Press Enter to Search"
           type="text"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
@@ -103,12 +103,12 @@ const Admin = () => {
         />
       </div>
 
-      <div className="bg-blue-200">
+      <div className="bg-slate-600 rounded-md shadow-md">
         <ul className="flex p-2">
-          <li className="w-1/4 ml-5 font-bold">Name</li>
-          <li className="w-1/4 font-bold">Email</li>
-          <li className="w-1/4 font-bold">Role</li>
-          <li className="w-1/4 font-bold">Actions</li>
+          <li className="w-1/4 ml-5 text-white font-bold">Name</li>
+          <li className="w-1/4 text-white font-bold">Email</li>
+          <li className="w-1/4 text-white font-bold">Role</li>
+          <li className="w-1/4 text-white font-bold">Actions</li>
         </ul>
       </div>
       <div>
@@ -121,7 +121,7 @@ const Admin = () => {
           )
           .map((item) => (
             <ul
-              className={`flex p-2 ${item.selected ? "bg-blue-100" : ""}`}
+              className={`flex p-2 ${item.selected ? "bg-indigo-100" : ""}`}
               key={item.id}
             >
               <input
