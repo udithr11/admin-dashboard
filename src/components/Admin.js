@@ -3,6 +3,8 @@ import { Api_calling } from "../constants";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin7Fill } from "react-icons/ri";
+import { Link } from "react-router-dom";
+
 
 const Admin = () => {
   const [database, setDatabase] = useState([]);
@@ -95,6 +97,7 @@ const Admin = () => {
           onChange={(e) => setSearchValue(e.target.value)}
           ref={focus}
         />
+        <Link title="Know about all the features" className="font-bold mx-auto" to="/features">Features</Link>
         <RiDeleteBin7Fill
           title="delete many"
           onClick={handle_delete_many}
